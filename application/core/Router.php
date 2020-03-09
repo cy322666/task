@@ -1,16 +1,31 @@
 <?php
 
+   //namespace application\core;
+
+   //use application\core\View;
+
     class Router
     {
-        private $routes;
+        public $routes;
 
         public function __construct()
         {
-            $routesPath   = ROOT.'/config/routes.php';
+            $this->routes = include_once(ROOT.'/application/config/routes.php');
 
-            print_r($routesPath);
+            //проверить наличие запроса в роутес.пхп
+            echo '<pre>URI : '; print_r($this->getURI()); echo '</pre>';
 
-            $this->routes = include($routesPath);
+            foreach ($this->routes as $uriPattern => $array)
+            {
+                echo '<pre> : ';
+                print_r($array);
+                echo '</pre>';
+
+                if (preg_match("-$uriPattern-", $this->getURI()))
+                {
+                    return $this->route = $array;
+                }
+            }
         }
 
         /**
@@ -29,52 +44,35 @@
         //принимает от фронт контроллера
         public function run()
         {
-            //проверить наличие запроса в роутес.пхп
-
-            echo '<pre>URI : '; print_r($this->getURI()); echo '</pre>';
-
-            foreach ($this->routes as $uriPattern => $path)
+            if($this->route)
             {
-                echo "<br>путь : $path";
+                //значит в массиве с маршрутами есть совпадение с частью урл. т.е. мы на этой странице
+                echo "+";
+                echo '<pre>ПАТТЕРН = GETURI : '; print_r($this->route); echo '</pre>';
 
-                echo '<pre>'; print_r("$uriPattern"); echo '</pre>';
+                $controllerName = 'controller'.ucfirst($this->route['controller']);
 
-                if(preg_match("-$uriPattern-", $this->getURI()))
+                echo '<br> Class: '.$controllerName;
+
+                //подключиТЬ файл - класс контроллера
+                $controllerPath = 'application/controllers/'.$controllerName;
+
+                echo '<pre>PATH КОНТРОЛЛЕРА : '; print_r($controllerPath); echo '</pre>';
+
+                if(file_exists($controllerPath.'.php'))
                 {
-                    //значит в массиве с маршрутами есть совпадение с частью урл. т.е. мы на этой странице
-                    echo "+";
+                    include_once($controllerPath.'.php');
 
-                    $segments = explode('/', $path);
+                    $action = 'action'.ucfirst($this->route['action']);
 
-                    echo '<pre>СЕГМЕНТ : '; print_r($segments); echo '</pre>';
+                    var_dump($action);
 
-                    $controllerName = 'controller'.ucfirst($segments[0]);
-                    $actionName     = 'action'.ucfirst($segments[0]);
+                    $controller = new $controllerName($this->route);
+                    $controller->$action();
 
-                    echo '<br> Class: '.$controllerName;
-                    echo '<br> Action: '.$actionName;
-
-                    //подключиТЬ файл - класс контроллера
-                    $controllerFile = ROOT.'/Controllers/'.$controllerName.'.php';
-
-                    echo '<pre>ФАЙЛ КОНТРОЛЛЕРА : '; print_r($controllerFile); echo '</pre>';
-
-                    if(file_exists($controllerFile))
-                    {
-                        include_once ($controllerFile);
-
-                        echo '<pre>КОНТРОЛЛЕР СУЩЕСТВУЕТ';
+                } else {
+                        echo '!CLASS';
                     }
-
-                    //создать объект, вызвать метод (экшн)
-                    $controllerObject = new $controllerName;
-                    $result           = $controllerObject->$actionName();
-
-                    if($result != null)
-                    {
-                        break;
-                    }
-                }
+                } else echo '!file';
             }
         }
-    }

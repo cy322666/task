@@ -1,6 +1,19 @@
 <?php
     return [
-        'list'  => 'list',//список задач
-        'login' => 'login',//авторизация
-        'init'  => 'init'//главная
+        'account/login' => [
+            'controller' => 'account',
+            'action'     => 'login'
+        ],
+        'task' => [
+            'controller' => 'main',
+            'action'     => 'index'
+        ],
+        'task/sort' => [
+            'controller' => 'task',
+            'action'     => 'sort'
+        ],
+        'account/admin' => [
+            'controller' => 'account',
+            'action'     => 'admin'
+        ],
     ];

@@ -1,0 +1,17 @@
+#401 Авторизация не выполнена
+#ErrorDocument 401 http://domain.ru/errors/401.html
+##403 Доступ запрещен
+#ErrorDocument 403 http://domain.ru/errors/403.html
+##404 Страница не найдена
+#ErrorDocument 404 http://domain.ru/errors/404.html
+##500 Внутренняя ошибка сервера
+#ErrorDocument 500 http://domain.ru/errors/500.html
+#Включение обработки PHP в .html-файлах
+RemoveHandler .html .htm
+AddType application/x-httpd-php .php .htm .html .phtml
+
+#Обработка одним файлом
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php
