@@ -10,12 +10,16 @@ class controllerMain extends Controller
 {
     function actionIndex()
     {
-        $this->view->render('Главная страница','');
+        $vars = $this->model->loadModel('all');
+
+        $this->view->render('Главная страница', $vars );
     }
 
     function actionSort()
     {
+        $vars = $this->model->loadModel('sort');
 
-        require_once ROOT. '/application/views/header.php';
+        $this->view->render('Сортировка на главной', $vars);
     }
+
 }

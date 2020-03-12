@@ -4,26 +4,24 @@
     {
         public $route;
         public $view;
+        public $model;
 
         public function __construct($route)
         {
             require_once 'View.php';
+            require_once 'Model.php';
 
             $this->route = $route;
-            $this->view = new View($route);
 
-            //$this->model = $this->loadModel($route['controller']);
-
-            var_dump($this->route);
+            $this->model = new Model();
+            $this->view  = new View($route);
         }
 
         public function loadModel($name)
         {
             $path = 'application/models/'.ucfirst($name);
 
-                return new $path;
-
-            var_dump($path);
+            return new $path;
         }
 
     }

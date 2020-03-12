@@ -1,49 +1,82 @@
 <?php
 
-//namespace application\controllers;
-
-//use application\core\Controller;
-
 require_once 'application/core/Controller.php';
 
 class controllerAccount extends Controller
 {
     public function actionLogin()
     {
-            echo 'in actionLogin';
-            $this->view->render('Вход');
-//            $db = mysqli_connect('localhost', 'cy322666', 'jd5xugLMrr', 'phpmyadmin');
-//            $db = new PDO('mysql:dbname=phpmyadmin;host=127.0.0.1','cy322666','jd5xugLMrr', [PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8']);
-//
-//            //if($db) var_dump($db);
-//
-//            /*
-//             * по ГЕТ может прилетать номер страницы
-//             * изначально кидаем на 1
-//             * если итог деления меньше 1 то страница 1
-//             * затем выводим -1 и +1 страницы
-//             * в принципе соединение с бд нужно всегда
-//             * надо инициализировать повыше после всех проверок страниц
-//             */
-//
-//            $query = $db->query("SELECT * FROM `task_default`");
-//            $query = $query->fetchAll();
-//            var_dump($query);
-//
-//            echo '</br>COUNT TASK : '.count($query);
-//            echo '</br>COUNT PAGE : '.count($query) / 3;
-//
-//            $page = '1';
-//            //к примеру пришел стр 1
-//            $countPages = round(count($query)) / 3;
-//
-//            if($countPages == $page)
-//            {
-//                echo $page.' page';
-//
-//            } elseif($countPages <= 1) echo '1';
-//
-//
-//            echo '<pre>'; print_r($query); echo '</pre>';
+        $this->view->render('Вход', '' );
+    }
+
+    public function actionEdit()
+    {
+        require_once 'application/models/task.php';
+
+        $task = new Task;
+        $vars = $task->getTask(Model::getConnection(), 'id');
+
+        if(Model::checkAdmin()) {
+            $this->view->render('Редактировать задачу', $vars);
+        } else require_once 'application/views/noaccess.php';
+    }
+
+    public function actionUpdate()
+    {
+        require_once 'application/models/task.php';
+
+        $task = new Task;
+        $task->updateTask(Model::getConnection());
+
+        if(Model::checkAdmin()) {
+            $this->view->render('Обновление', '' );
+        } else require_once 'application/views/noaccess.php';
+    }
+
+    public function actionAccess()
+    {
+        $result = Model::validationForm($_POST);
+        $access = require_once 'application/config/admin.php';
+
+        if (($result AND ($access['login'] == $result['login']) AND
+            ($access['pass'] == $result['pass']))) {
+
+            $vars = $this->model->loadModel('all');
+            setcookie('admin', 'login', 0, '/');
+            $this->view->render('Hello, Admin!', $vars );
+
+        } else {
+            $vals = [
+                'label' => 'Неправильный логин или пароль!',
+                'button' => 'Вернуться'
+            ];
+            $this->view->render('Ошибка', $vals);
         }
     }
+
+    public function actionAdmin()
+    {
+        $vars = $this->model->loadModel('all');
+
+        if(Model::checkAdmin()) {
+            $this->view->render('Hello, Admin!', $vars );
+        } else require_once 'application/views/noaccess.php';
+
+    }
+
+    public function actionSort()
+    {
+        $vars = $this->model->loadModel('sort');
+
+        if(Model::checkAdmin()) {
+            $this->view->render('Сортировка', $vars );
+        } else require_once 'application/views/noaccess.php';
+    }
+
+    public function actionExit()
+    {
+        $vars = $this->model->loadModel('all');
+
+        $this->view->render('Главная страница', $vars);
+    }
+}

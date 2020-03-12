@@ -22,10 +22,8 @@
         {
             $path = 'application/views/layouts/'.$this->path.'.php';
 
-            echo $path;
-            //ob_start();
+            //echo '<pre>PATH LAYOUTS'; print_r($path); echo '</pre>';
+
             require_once $path;
-            //$content = ob_get_clean();
-            //require_once 'application/views/layouts/'.$this->layout.'php';
         }
     }
