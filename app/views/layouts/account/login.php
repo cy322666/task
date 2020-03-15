@@ -1,6 +1,4 @@
-<?php require 'app/views/default.php'; ?>
-
-<body>
+<?php if(!$_SESSION['admin']) { ?>
     <form action="access" method="post">
         <div class="form-group">
             <label for="exampleInputText1">Введите логин</label>
@@ -12,5 +10,7 @@
         </div>
         <button type="submit" class="btn btn-primary">Войти</button>
     </form>
-
-<?php require 'app/views/footer.php'; ?>
+<?php
+    } else {
+        header("Location: admin");
+    }

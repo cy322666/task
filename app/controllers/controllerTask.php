@@ -1,9 +1,5 @@
 <?php
 
-//namespace app\controllers;
-
-//use app\core\Controller;
-
 require_once 'app/core/Controller.php';
 
 class controllerTask extends Controller
@@ -13,23 +9,21 @@ class controllerTask extends Controller
         $this->view->render('Создать задачу', '' );
     }
 
-    public function actionNewTask()
+    public function actionNew()
     {
-        $result = Model::validationForm($_POST);
+        $this->model->loadModel('task');
+
+        $task   = new task;
+        $result = $task->validationForm($_POST);
 
         if($result) {
-            $vals = [
-                'label' => 'Задача успешно добавлена',
-                'button' => 'К Задачам'
-            ];
-            $this->view->render('Успешно',  $vals);
-        } else {
+            $add = $task->addTask($this->model->connectDB(), $_POST);
 
-            $vals = [
-                'label' => 'Заполните корректно данные',
-                'button' => 'Исправить'
-            ];
-            $this->view->render('Ошибка', $vals);
+            if($add) {
+                $this->view->render('Задача успешно добавлена',  'К задачам');
+            } else $this->view->render('Задача не добавлена, ошибка', 'ИсправитьВернуться');
+        } else {
+            $this->view->render('Заполните корректно данные', 'Исправить');
         }
     }
 }

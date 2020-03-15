@@ -1,6 +1,6 @@
 <?php
 
-use application\core\Controller;
+require_once 'app/core/Controller.php';
 
 class controllerAccount extends Controller
 {
@@ -33,34 +33,46 @@ class controllerAccount extends Controller
         } else require_once 'app/views/noaccess.php';
     }
 
+    /**
+     * Обработка формы входа Админа
+     */
     public function actionAccess()
     {
-        $result = Model::validationForm($_POST);
         $access = require_once 'app/config/admin.php';
 
-        if (($result AND ($access['login'] == $result['login']) AND
-            ($access['pass'] == $result['pass']))) {
+        $this->model->loadModel('admin');
 
-            $vars = $this->model->loadModel('all');
-            setcookie('admin', 'login', 0, '/');
-            $this->view->render('Hello, Admin!', $vars );
+        $admin = new admin;
+        $login = $admin->validationForm($_POST);
 
-        } else {
-            $vals = [
-                'label' => 'Неправильный логин или пароль!',
-                'button' => 'Вернуться'
-            ];
-            $this->view->render('Ошибка', $vals);
+        if($login) {
+            if (($login AND ($access['login'] == $login['login']) AND
+                ($access['pass'] == $login['pass']))) {
+
+                    $this->model->loadModel('task');
+                    $task = new task;
+
+                    $page = $task->getPage($_GET);
+                    $vars = $task->getTask($this->model->connectDB(), 'all', $page);
+
+                    $_SESSION['admin'] = true;
+
+                    $this->view->render('Hello, Admin!', 'В админку');
+            } else {
+                $this->view->render('Неправильный логин или пароль!', 'Вернуться');
+            }
         }
     }
 
     public function actionAdmin()
     {
-        $vars = $this->model->loadModel('all');
+        $this->model->loadModel('task');
+        $task = new task;
 
-        if(Model::checkAdmin()) {
-            $this->view->render('Hello, Admin!', $vars );
-        } else require_once 'app/views/noaccess.php';
+        $page = $task->getPage($_GET);
+        $vars = $task->getTask($this->model->connectDB(), 'all', $page);
+
+        $this->view->render('Кабинет Администратора', $vars);
 
     }
 

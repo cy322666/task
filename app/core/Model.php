@@ -20,25 +20,6 @@ class Model
         }
     }
 
-    //убрать
-    static function validationForm($array)
-    {
-        foreach ($array as $key => $value) {
-
-            $value = trim($value);
-            $value = stripslashes($value);
-            $value = strip_tags($value);
-            $value = htmlspecialchars($value);
-
-            $array[$key] = $value;
-
-            if ($array[$key] == '') {
-                return false;
-            }
-        }
-        return $array;
-    }
-
     public function loadModel($name)
     {
         $path = 'app/models/'.$name;

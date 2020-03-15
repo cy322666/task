@@ -4,11 +4,6 @@ require_once 'app/core/Model.php';
 
 class task extends Model
 {
-    function __construct()
-    {
-        echo 'task';
-    }
-
     /**
      * @param $connect Model объект PDO
      * @param $value
@@ -104,12 +99,35 @@ class task extends Model
 //        }
 
         return $page;
-            //'val'  => $val
     }
 
     public function addTask($connect, $array)
     {
-        $values = "`id` = ".$array['text'].", `name` = ".$array['name'].", `email` = ".$array['email'];
-        $connect->query("INSERT INTO `task_default` (" . $values . " )");
+        $keys   = "`text`, `name`, `email`";
+        $values = "'".$array['text']."', '".$array['user']."', '".$array['email']."'";
+
+        $request = $connect->query("INSERT INTO `task_default` (".$keys.") VALUES (".$values.") ");
+
+        if($request){
+            return true;
+        } else return false;
+    }
+
+    public function validationForm($array)
+    {
+        foreach ($array as $key => $value) {
+
+            $value = trim($value);
+            $value = stripslashes($value);
+            $value = strip_tags($value);
+            $value = htmlspecialchars($value);
+
+            $array[$key] = $value;
+
+            if ($array[$key] == '') {
+                return false;
+            }
+        }
+        return $array;
     }
 }

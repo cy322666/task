@@ -1,8 +1,32 @@
 <?php
-    require 'app/views/default.php';
-    echo "Для редактирования нажми на задачу";
-    require 'app/views/navbar.php';
-    require 'taskList.php';
-    require 'app/views/pager.php';
-    require 'app/views/footer.php';
-?>
+    include_once 'app/views/navbar.php';
+        echo "<class='blockTask'>";
+        for ($i = 0, $task = $vars['task']; $i != 3; $i++):
+            if(!$task[$i]) continue; ?>
+            <div class="list-group">
+                <a href="edit?id=<?php echo $task[$i]['id'] ?>" class="list-group-item list-group-item-action flex-column align-items-start <?php echo $task[$i]['status']; ?>">
+                    <!--<a href="" class="list-group-item list-group-item-action flex-column align-items-start ?>">//ТУТ ССЫЛКА НА ФОРМУ РЕДАКТИРОВАНИЯ ТЕКСТА..или ФОРМА ПОЯВЛЯЕТСЯ //тут текст редактировать-->
+                    <div class="form-check">
+
+                        <?php if($task[$i]['status'] == 'active') {
+                            echo " 
+                        <input class='form-check-input' type='checkbox' id='checkbox1'>
+                        <label class='form-check-label' for='defaultCheck1'>Выполнить</label>";
+                        } else {
+                            echo "
+                        <input class='form-check-input' type='checkbox' id='checkbox2' disabled>
+                        <label class='form-check-label' for='defaultCheck2'>Выполнено</label>";
+                        } ?>
+
+                    </div>
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1"><?php echo $task[$i]['name']; ?></h5>
+                        <small><?php echo $task[$i]['status']; ?></small>
+                    </div>
+                    <p class="mb-1"><?php echo $task[$i]['text']; ?></p>
+
+                    <small><?php echo $task[$i]['email']; ?></small>
+                </a>
+            </div>
+<?php endfor; ?>
+<?php include_once 'app/views/pager.php'; ?>
