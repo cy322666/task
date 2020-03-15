@@ -20,7 +20,7 @@ class task extends Model
      *  ['массив 3 задач']
      *
      */
-    public function getTask($connect, $value)
+    public function getTask($connect, $value, $page)
     {
         switch ($value) {
 
@@ -46,18 +46,30 @@ class task extends Model
 
         if ($query) {
             $array = $query->fetchAll();
+            $task  = $this->getVars($array, $page);
 
-            for($i = 0, $page = 0, $j = 0; $i < count($array); $i++, $j++) {
-                if($j % 3 == 0) {
-                    ++$page;
-                    $taskList[$page]['label'] = $page;
-                }
-                $taskList[$page][] = $array[$i];
-            }
-            $taskList[1]['countTask'] = $i;
-
-            return $taskList;
+            return $task;
+        } else {
+            echo 'Задач нет!';//static error
         }
+    }
+
+    private function getVars($array, $page)
+    {
+        for($i = 0, $value = 0, $j = 0; $i < count($array); $i++, $j++) {
+
+            if($j % 3 == 0) {
+                ++$value;
+            }
+            $taskList[$value][] = $array[$i];
+        }
+
+        $task['countTask'] = count($array);
+        $task['countPage'] = $value;
+        $task['page'] = $page;
+        $task['task'] = $taskList[$page];
+
+        return$task;
     }
 
     public function updateTask($connect)
@@ -72,6 +84,27 @@ class task extends Model
         if($query) {
             return $query->fetchAll();
         }
+    }
+
+    function getPage($array)
+    {
+        if($_GET['page']) {
+
+            $page = $_GET['page'];
+            unset($_GET['page']);
+
+        } else {
+            $page = 1;
+        }
+
+//        if($_GET) {
+//            $val = '&';
+//        } else {
+//            $val = '?';
+//        }
+
+        return $page;
+            //'val'  => $val
     }
 
     public function addTask($connect, $array)

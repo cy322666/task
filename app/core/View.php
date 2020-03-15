@@ -18,6 +18,7 @@ class View
     public function render($title, $vars = [])
     {
         require_once 'app/views/default.php';
+
         $viewFile = 'app/views/layouts/'.$this->path.'.php';
 
         require_once $viewFile;

@@ -8,11 +8,12 @@ class controllerMain extends Controller
     {
         $this->model->loadModel('task');
         $task = new task;
-        $vars = $task->getTask($this->model->connectDB(), 'all');
 
-        //Model::arrPrint($vars);
+        $page = $task->getPage($_GET);
+        $vars = $task->getTask($this->model->connectDB(), 'all', $page);
 
-        $this->view->render('Главная страница', $vars );
+        Model::arrPrint($vars);
+        $this->view->render('Главная страница', $vars);
     }
 
     function actionSort()

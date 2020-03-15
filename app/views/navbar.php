@@ -16,10 +16,11 @@
     </li>
     <!-- если вошли, то кнопка выйти-->
     <li class="nav-item">
-        <?php if($login != true) {
-            echo "<a class='nav-link' href='account/login'>Войти</a>";
-        } else {
-            echo "<a class='nav-link' href='account/exit'>Выйти</a>";
-        } ?>
+        <?php //if($login != true) {
+           echo "<a class='nav-link' href='account/login'>Войти</a>";
+        //} else {
+            //echo "<a class='nav-link' href='account/exit'>Выйти</a>";
+        //}
+        ?>
     </li>
 </ul>

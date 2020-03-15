@@ -48,29 +48,6 @@ class Model
         return $task;
     }
 
-    //убрать
-    static function getPage()
-    {
-        if($_GET['activePage']) {
-            $page = $_GET['activePage'];
-            unset($_GET['activePage']);
-
-        } else {
-            $page = '1';
-        }
-
-        if($_GET) {
-            $val = '&';
-        } else {
-            $val = '?';
-        }
-
-        return [
-            'page' => $page,
-            'val'  => $val
-        ];
-    }
-
     static function arrPrint($array)
     {
         echo "<pre>"; print_r($array); echo "</pre>";
