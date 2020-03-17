@@ -15,38 +15,40 @@ class task extends Model
      *  ['массив 3 задач']
      *
      */
-    public function getTask($connect, $value, $page)
+    public function getTask($dbh, $value, $page)
     {
         switch ($value) {
 
             case 'all':
-                $query = $connect->query("SELECT * FROM `task_default`");
+                $sth = $dbh->prepare("SELECT * FROM `task_default`");
+                $sth->execute();
+
                 break;
 
             case 'sort':
-                if($_GET == 'up') {
-                    $sort = 'ASC';
-                } else {
-                    $sort = 'DESC';
-                }
-                $query = $connect->query("SELECT * FROM `task_default` ORDER BY " . $_GET['value'] . " " .$sort);
+                if($_GET == 'up') $sort = 'ASC';
+                    else $sort = 'DESC';
 
-                echo "SELECT * FROM `task_default` ORDER BY " . $_GET['value'] . " " .$sort;
+                $sth = $dbh->prepare("SELECT * FROM `task_default` ORDER BY " . $_GET['value'] . " " .$sort);
+                $sth->execute();
+                $array = $sth->fetch(PDO::FETCH_ASSOC);
+
                 break;
 
             case 'id':
-                $query = $connect->query("SELECT * FROM `task_default` WHERE `id` = " . $_GET['id']);//
+                $sth = $dbh->prepare("SELECT * FROM `task_default` WHERE `id` = :id");
+                $sth->execute(['id' => $_GET['id']]);
+                $array = $sth->fetch(PDO::FETCH_ASSOC);
+
                 break;
         }
 
-        if ($query) {
-            $array = $query->fetchAll();
-            $task  = $this->getVars($array, $page);
-
-            return $task;
-        } else {
-            echo 'Задач нет!';//static error
-        }
+        if($array) {
+            if($value != 'id') {
+                $array = $this->getVars($array, $page);
+            }
+            return $array;
+        } else return 'Задач нет!';//static error
     }
 
     private function getVars($array, $page)
@@ -69,34 +71,35 @@ class task extends Model
 
     public function updateTask($connect)
     {
-        $vals = '';
-
-        foreach ($_POST as $value => $key) {
-            $vals .= '`'.$key."` = '".$value."', ";
+        foreach ($_POST as $key => $value) {
+            if($value) {
+                if($value == 'checkbox') {
+                    $vars .= "`status` = 'completed', ";
+                } else {
+                    $vars .= '`'.$key."` = '".$value."', ";
+                }
+            }
         }
-        $query = $connect->query("UPDATE `task_default` ". $vals ."SET WHERE `id` = ".$_GET['id']);
+        $vars = trim($vars, ', ');
 
-        if($query) {
-            return $query->fetchAll();
-        }
+        $sth = $dbh->prepare("UPDATE `task_default` SET `name` = :name WHERE `id` = :id");
+        $sth->execute(array('name' => 'Виноград', 'id' => 22));
+
+        echo $vars;
+        //$query = $connect->query( ". $vars ."SET WHERE `id` = ".$_GET['id']);
+
+//        if($query) {
+//            return $query->fetchAll();
+//        }
     }
 
     function getPage($array)
     {
         if($_GET['page']) {
-
             $page = $_GET['page'];
             unset($_GET['page']);
 
-        } else {
-            $page = 1;
-        }
-
-//        if($_GET) {
-//            $val = '&';
-//        } else {
-//            $val = '?';
-//        }
+        } else $page = 1;
 
         return $page;
     }

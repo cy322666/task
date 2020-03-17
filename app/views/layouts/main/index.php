@@ -15,8 +15,3 @@
     </div>
 <?php endfor; ?>
 <?php include_once 'app/views/pager.php'; ?>
-
-
-
-
-

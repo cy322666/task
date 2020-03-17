@@ -11,26 +11,22 @@ class controllerAccount extends Controller
 
     public function actionEdit()
     {
-        require_once 'app/models/task.php';
+        $this->model->loadModel('task');
 
-        $task = new Task;
-        $vars = $task->getTask(Model::getConnection(), 'id');
+        $task = new task;
+        $vars = $task->getTask($this->model->connectDB(), 'id', '');
 
-        if(Model::checkAdmin()) {
-            $this->view->render('Редактировать задачу', $vars);
-        } else require_once 'app/views/noaccess.php';
+        $this->view->render('Редактировать задачу', $vars);
     }
 
     public function actionUpdate()
     {
-        require_once 'app/models/task.php';
+        $this->model->loadModel('task');
 
-        $task = new Task;
-        $task->updateTask(Model::getConnection());
+        $task = new task;
+        $vars = $task->updateTask($this->model->connectDB(), 'id', '');
 
-        if(Model::checkAdmin()) {
             $this->view->render('Обновление', '' );
-        } else require_once 'app/views/noaccess.php';
     }
 
     /**
@@ -40,10 +36,10 @@ class controllerAccount extends Controller
     {
         $access = require_once 'app/config/admin.php';
 
-        $this->model->loadModel('admin');
+        $this->model->loadModel('task');
 
-        $admin = new admin;
-        $login = $admin->validationForm($_POST);
+        $task = new task;
+        $login = Model::validationForm($_POST);
 
         if($login) {
             if (($login AND ($access['login'] == $login['login']) AND

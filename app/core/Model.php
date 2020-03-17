@@ -23,10 +23,27 @@ class Model
     public function loadModel($name)
     {
         $path = 'app/models/'.$name;
-
         $task = require_once $path.'.php';
 
         return $task;
+    }
+
+    public function validationForm($array)
+    {
+        foreach ($array as $key => $value) {
+
+            $value = trim($value);
+            $value = stripslashes($value);
+            $value = strip_tags($value);
+            $value = htmlspecialchars($value);
+
+            $array[$key] = $value;
+
+            if ($array[$key] == '') {
+                return false;
+            }
+        }
+        return $array;
     }
 
     static function arrPrint($array)

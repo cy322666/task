@@ -1,5 +1,4 @@
 <?php
-
     session_destroy();
-//location
+    header( "Location : task");
 ?>

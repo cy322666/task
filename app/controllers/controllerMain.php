@@ -24,7 +24,11 @@ class controllerMain extends Controller
 
     function actionSort()
     {
-        $vars = $this->model->loadModel('sort');
+        $this->model->loadModel('task');
+        $task = new task;
+
+        $page = $task->getPage($_GET);
+        $vars = $task->getTask($this->model->connectDB(), 'sort', $page);
 
         $this->view->render('Сортировка на главной', $vars);
     }
