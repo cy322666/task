@@ -6,7 +6,7 @@ class Router
 
     public function __construct()
     {
-        $this->routes = include_once(ROOT.'/app/config/routes.php');
+        $this->routes = include_once('app/config/routes.php');
 
         foreach ($this->routes as $uriPattern => $array)
         {
@@ -27,6 +27,7 @@ class Router
     {
         if($this->route)
         {
+            session_start();
             $controllerName = 'controller'.ucfirst($this->route['controller']);
             $controllerPath = 'app/controllers/'.$controllerName;
 

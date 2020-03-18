@@ -15,40 +15,45 @@ class task extends Model
      *  ['массив 3 задач']
      *
      */
-    public function getTask($dbh, $value, $page)
+    public function getContent($value, $page)
     {
-        switch ($value) {
+        $action = 'get'.ucfirst($value);
+        $array = $this->$action;
 
-            case 'all':
-                $sth = $dbh->prepare("SELECT * FROM `task_default`");
-                $sth->execute();
 
-                break;
-
-            case 'sort':
-                if($_GET == 'up') $sort = 'ASC';
-                    else $sort = 'DESC';
-
-                $sth = $dbh->prepare("SELECT * FROM `task_default` ORDER BY " . $_GET['value'] . " " .$sort);
-                $sth->execute();
-                $array = $sth->fetch(PDO::FETCH_ASSOC);
-
-                break;
-
-            case 'id':
-                $sth = $dbh->prepare("SELECT * FROM `task_default` WHERE `id` = :id");
-                $sth->execute(['id' => $_GET['id']]);
-                $array = $sth->fetch(PDO::FETCH_ASSOC);
-
-                break;
-        }
-
-        if($array) {
-            if($value != 'id') {
+        if ($array) {
+            if ($page) {
                 $array = $this->getVars($array, $page);
             }
-            return $array;
-        } else return 'Задач нет!';//static error
+        }
+        return $array;
+    }
+
+    private function getAll()
+    {
+        $sth = $this->model->dbh->prepare("SELECT * FROM `task_default`");
+        $sth->execute();
+
+        return $sth->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    private function getSort()
+    {
+        if($_GET == 'up') $sort = 'ASC';
+        else $sort = 'DESC';
+
+        $sth = $dbh->prepare("SELECT * FROM `task_default` ORDER BY " . $_GET['value'] . " " .$sort);
+        $sth->execute();
+
+        return $sth->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    private function getId()
+    {
+        $sth = $dbh->prepare("SELECT * FROM `task_default` WHERE `id` = :id");
+        $sth->execute(['id' => $_GET['id']]);
+
+        return  $sth->fetch(PDO::FETCH_ASSOC);
     }
 
     private function getVars($array, $page)
@@ -66,7 +71,7 @@ class task extends Model
         $task['page'] = $page;
         $task['task'] = $taskList[$page];
 
-        return$task;
+        return $task;
     }
 
     public function updateTask($connect)
@@ -88,9 +93,6 @@ class task extends Model
         echo $vars;
         //$query = $connect->query( ". $vars ."SET WHERE `id` = ".$_GET['id']);
 
-//        if($query) {
-//            return $query->fetchAll();
-//        }
     }
 
     function getPage($array)

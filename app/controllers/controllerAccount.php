@@ -36,8 +36,6 @@ class controllerAccount extends Controller
     {
         $access = require_once 'app/config/admin.php';
 
-        $this->model->loadModel('task');
-
         $task = new task;
         $login = Model::validationForm($_POST);
 
@@ -50,8 +48,6 @@ class controllerAccount extends Controller
 
                     $page = $task->getPage($_GET);
                     $vars = $task->getTask($this->model->connectDB(), 'all', $page);
-
-                    $_SESSION['admin'] = true;
 
                     $this->view->render('Hello, Admin!', 'В админку');
             } else {
@@ -76,9 +72,7 @@ class controllerAccount extends Controller
     {
         $vars = $this->model->loadModel('sort');
 
-        if(Model::checkAdmin()) {
-            $this->view->render('Сортировка', $vars );
-        } else require_once 'app/views/noaccess.php';
+        $this->view->render('Сортировка', $vars );
     }
 
     public function actionExit()

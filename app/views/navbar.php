@@ -17,13 +17,7 @@
             <a class="dropdown-item" href="<?php $path ?>sort?value=status&sort=down">Статус</a>
         </div>
     </li>
-    <!-- если вошли, то кнопка выйти-->
     <li class="nav-item">
-        <?php if(!$_SESSION['admin']) {
-           echo "<a class='nav-link' href='account/login'>Войти</a>";
-        } else {
-            echo "<a class='nav-link' href='account/exit'>Выйти</a>";
-        }
-        ?>
+        "<a class='nav-link' href='account/<?php echo $login; ?>'><?php echo $login; ?></a>";
     </li>
 </ul>

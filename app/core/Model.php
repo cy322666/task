@@ -4,7 +4,7 @@ class Model
 {
     public function connectDB()
     {
-        $val = require_once 'app/config/db.php';
+        $val = include_once 'app/config/db.php';
         $dsn = "mysql:dbname=".$val['dbname'].';host='.$val['host'];
 
         try {

@@ -16,7 +16,6 @@
                         <input class='form-check-input' type='checkbox' name='checkbox' value='completed' id='checkbox'>
                         <label class='form-check-label' for='defaultCheck1'>Выполнить задачу</label>
                      </div> ";
-                //$('.your-checkbox').prop('indeterminate', true)
             }
             ?>
         </div>

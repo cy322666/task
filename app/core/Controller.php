@@ -12,9 +12,6 @@ abstract class Controller
      */
     public function __construct($route)
     {
-        require_once 'View.php';
-        require_once 'Model.php';
-
         $this->route = $route;
 
         echo 'ПЕЧАТЬ ROUTER, VIEW, CONTROLLER';

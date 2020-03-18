@@ -4,20 +4,20 @@ require_once 'app/core/Controller.php';
 
 class controllerMain extends Controller
 {
-    /**
-     * При переходе на главную
-     * Если сессия админа, то перебрасывает на админку
-     */
     public function actionIndex()
     {
         if(!$_SESSION['admin']) {
+
             $this->model->loadModel('task');
+
             $task = new task;
+            $vars = $task->getContent('all', $_GET['page']);
 
-            $page = $task->getPage($_GET);
-            $vars = $task->getTask($this->model->connectDB(), 'all', $page);
+            Model::arrPrint($vars);
 
-            $this->view->render('Главная страница', $vars);
+            $content = $this->view->render('Главная страница', $vars);
+
+            Model::arrPrint($content);
 
         } else header( "Location: account/admin");
     }
@@ -30,7 +30,7 @@ class controllerMain extends Controller
         $page = $task->getPage($_GET);
         $vars = $task->getTask($this->model->connectDB(), 'sort', $page);
 
-        $this->view->render('Сортировка на главной', $vars);
+        $content = $this->view->render('Сортировка на главной', $vars);
     }
 
 }

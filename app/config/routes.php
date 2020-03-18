@@ -1,48 +1,36 @@
 <?php
     return [
-        'account/login' => [
+        'login' => [
             'controller' => 'account',
             'action'     => 'login'
         ],
-        'account/exit' => [
-            'controller' => 'account',
-            'action'     => 'exit'
-        ],
-        'task/sort' => [
+        'sort' => [
             'controller' => 'main',
             'action'     => 'sort'
         ],
-        'task/create' => [
+        'create' => [
             'controller' => 'task',
             'action'     => 'create'
         ],
-        'task/new' => [
+        'new' => [
             'controller' => 'task',
             'action'     => 'new'
         ],
-        'account/admin' => [
-            'controller' => 'account',
-            'action'     => 'admin'
-        ],
-        'account/update' => [
+        'update' => [
             'controller' => 'account',
             'action'     => 'update'
         ],
-        'account/edit' => [
+        'edit' => [
             'controller' => 'account',
             'action'     => 'edit'
         ],
-        'account/access' => [
+        'access' => [
             'controller' => 'account',
             'action'     => 'access'
-        ],
-        'account/validationLogin' => [
-            'controller' => 'account',
-            'action'     => 'validationLogin'
         ],
         'task' => [
             'controller' => 'main',
             'action'     => 'index'
-        ],
+        ]
     ];
 
