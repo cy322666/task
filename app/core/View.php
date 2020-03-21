@@ -17,10 +17,14 @@ class View
 
     public function render($title, $vars = [])
     {
+        if($vars['countPage']) {
+            $navbar = 'app/views/navbar.php';
+        }
+        if($vars['page']) {
+            $pager = 'app/views/pager.php';
+        }
+        $content = 'app/views/layouts/'.$this->path.'.php';
+
         require_once 'app/views/template.php';
-
-        $viewFile = 'app/views/layouts/'.$this->path.'.php';
-
-        require_once $viewFile;
     }
 }

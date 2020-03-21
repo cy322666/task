@@ -1,6 +1,4 @@
 <?php
-include_once 'app/views/navbar.php';
-echo "<class='blockTask'>";
 for ($i = 0, $task = $vars['task']; $i != 3; $i++):
     if(!$task[$i]) continue; ?>
     <div class="list-group">
@@ -14,4 +12,3 @@ for ($i = 0, $task = $vars['task']; $i != 3; $i++):
         </a>
     </div>
 <?php endfor; ?>
-<?php include_once 'app/views/pager.php'; ?>

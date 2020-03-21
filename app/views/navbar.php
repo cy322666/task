@@ -1,6 +1,6 @@
 <ul class="nav nav-tabs">
     <li class="nav-item">
-        <a class="nav-link" href="<?php $path ?>create">Создать задачу</a>
+        <a class="nav-link" href="create">Создать задачу</a>
     </li>
     <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Сортировать</a>
@@ -18,6 +18,10 @@
         </div>
     </li>
     <li class="nav-item">
-        "<a class='nav-link' href='account/<?php echo $login; ?>'><?php echo $login; ?></a>";
+        <?php
+            if($_SESSION['admin']) {
+                echo "<a class='nav-link' href='account/'>Вход</a>";
+            } else echo "<a class='nav-link' href='account/'>Выход</a>";
+        ?>
     </li>
 </ul>

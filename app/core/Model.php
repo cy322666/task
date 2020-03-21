@@ -2,7 +2,7 @@
 
 class Model
 {
-    public function connectDB()
+    private function connectDB()
     {
         $val = include_once 'app/config/db.php';
         $dsn = "mysql:dbname=".$val['dbname'].';host='.$val['host'];
@@ -20,12 +20,16 @@ class Model
         }
     }
 
-    public function loadModel($name)
+    public function loadModel($name, $key, $page)
     {
-        $path = 'app/models/'.$name;
-        $task = require_once $path.'.php';
+        $path  = 'app/models/'.$name;
+        require_once $path.'.php';
 
-        return $task;
+        $dbh   = $this->connectDB();
+        $model = new $name;
+        $vars  = $model->getContent($dbh, $key, $page);
+
+        return $vars;
     }
 
     public function validationForm($array)

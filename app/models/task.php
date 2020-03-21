@@ -15,34 +15,34 @@ class task extends Model
      *  ['массив 3 задач']
      *
      */
-    public function getContent($value, $page)
+    public function getContent($dbh, $key, $page)
     {
-        $action = 'get'.ucfirst($value);
-        $array = $this->$action;
-
+        $action = 'get'.ucfirst($key);
+        $array  = $this->$action($dbh);
 
         if ($array) {
-            if ($page) {
-                $array = $this->getVars($array, $page);
-            }
-        }
+            $page = $this->getPage($page);
+            $array = $this->getVars($array, $page);
+        } else echo 'задач в бд нет';//доделать
+
         return $array;
     }
 
-    private function getAll()
+    private function getAll($dbh)
     {
-        $sth = $this->model->dbh->prepare("SELECT * FROM `task_default`");
+        $sth = $dbh->prepare("SELECT * FROM `task`");
+
         $sth->execute();
 
         return $sth->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    private function getSort()
+    private function getSort($dbh)
     {
         if($_GET == 'up') $sort = 'ASC';
         else $sort = 'DESC';
 
-        $sth = $dbh->prepare("SELECT * FROM `task_default` ORDER BY " . $_GET['value'] . " " .$sort);
+        $sth = $dbh->prepare("SELECT * FROM `task` ORDER BY " . $_GET['value'] . " " .$sort);
         $sth->execute();
 
         return $sth->fetchAll(PDO::FETCH_ASSOC);
@@ -50,7 +50,7 @@ class task extends Model
 
     private function getId()
     {
-        $sth = $dbh->prepare("SELECT * FROM `task_default` WHERE `id` = :id");
+        $sth = $dbh->prepare("SELECT * FROM `task` WHERE `id` = :id");
         $sth->execute(['id' => $_GET['id']]);
 
         return  $sth->fetch(PDO::FETCH_ASSOC);
@@ -65,13 +65,12 @@ class task extends Model
             }
             $taskList[$value][] = $array[$i];
         }
+        $vars['countTask'] = count($array);
+        $vars['countPage'] = $value;
+        $vars['page'] = $page;
+        $vars['task'] = $taskList[$page];
 
-        $task['countTask'] = count($array);
-        $task['countPage'] = $value;
-        $task['page'] = $page;
-        $task['task'] = $taskList[$page];
-
-        return $task;
+        return $vars;
     }
 
     public function updateTask($connect)

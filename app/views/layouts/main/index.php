@@ -1,8 +1,7 @@
 <?php
-    include_once 'app/views/navbar.php';
-        echo "<class='blockTask'>";
-        for ($i = 0, $task = $vars['task']; $i != 3; $i++):
-            if(!$task[$i]) continue; ?>
+    echo "<class='blockTask'>";
+    for ($i = 0, $task = $vars['task']; $i != 3; $i++):
+        if(!$task[$i]) continue; ?>
     <div class="list-group">
         <a href="" class="list-group-item list-group-item-action flex-column align-items-start <?php echo $task[$i]['status']; ?>">
             <div class="d-flex w-100 justify-content-between">
@@ -14,4 +13,3 @@
         </a>
     </div>
 <?php endfor; ?>
-<?php include_once 'app/views/pager.php'; ?>
