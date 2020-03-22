@@ -6,9 +6,9 @@
         <?php
         for ($i = 0, $j = 1; $i < $vars['countPage']; $i++, $j++) {
             if($j == $vars['page']) {
-                echo "<li class='page-item active'><a class='page-link' href='/task?page=".$j."'>".$j."</a></li>";
+                echo "<li class='page-item active'><a class='page-link' href='?page=".$j."'>".$j."</a></li>";
                 continue;
-            } else echo "<li class='page-item'><a class='page-link' href='/task?page=".$j."'>".$j."</a></li>";
+            } else echo "<li class='page-item'><a class='page-link' href='?page=".$j."'>".$j."</a></li>";
         }
         ?>
     </ul>

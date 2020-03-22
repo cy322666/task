@@ -18,10 +18,6 @@
         </div>
     </li>
     <li class="nav-item">
-        <?php
-            if($_SESSION['admin']) {
-                echo "<a class='nav-link' href='account/'>Вход</a>";
-            } else echo "<a class='nav-link' href='account/'>Выход</a>";
-        ?>
+        <?php echo "<a class='nav-link' href='".$vars['user']['href']."'>".$vars['user']['label']."</a>"; ?>
     </li>
 </ul>

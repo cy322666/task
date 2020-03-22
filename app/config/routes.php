@@ -12,9 +12,13 @@
             'controller' => 'task',
             'action'     => 'create'
         ],
-        'new' => [
+        'admin' => [
+            'controller' => 'account',
+            'action'     => 'admin'
+        ],
+        'add' => [
             'controller' => 'task',
-            'action'     => 'new'
+            'action'     => 'add'
         ],
         'update' => [
             'controller' => 'account',
@@ -27,6 +31,10 @@
         'access' => [
             'controller' => 'account',
             'action'     => 'access'
+        ],
+        'feedback' => [
+            'controller' => 'account',
+            'action'     => 'feedback'
         ],
         'task' => [
             'controller' => 'main',

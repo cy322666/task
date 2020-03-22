@@ -2,7 +2,7 @@
 
 class Model
 {
-    private function connectDB()
+    protected function connectDB()
     {
         $val = include_once 'app/config/db.php';
         $dsn = "mysql:dbname=".$val['dbname'].';host='.$val['host'];
@@ -20,19 +20,15 @@ class Model
         }
     }
 
-    public function loadModel($name, $key, $page)
-    {
-        $path  = 'app/models/'.$name;
-        require_once $path.'.php';
+//    public function loadModel($name)
+//    {
+//        $path  = 'app/models/'.$name;
+//        $model = require_once $path.'.php';
+//
+//        return $model;
+//    }
 
-        $dbh   = $this->connectDB();
-        $model = new $name;
-        $vars  = $model->getContent($dbh, $key, $page);
-
-        return $vars;
-    }
-
-    public function validationForm($array)
+    protected function validationForm($array)
     {
         foreach ($array as $key => $value) {
 
@@ -61,8 +57,7 @@ class Model
      */
     static function getURI()
     {
-        if(!empty($_SERVER['REQUEST_URI']))
-        {
+        if(!empty($_SERVER['REQUEST_URI'])) {
             return trim($_SERVER['REQUEST_URI'], '/');
         }
     }

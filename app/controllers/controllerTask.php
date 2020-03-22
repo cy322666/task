@@ -9,15 +9,15 @@ class controllerTask extends Controller
         $this->view->render('Создать задачу', '' );
     }
 
-    public function actionNew()
+    public function actionAdd()
     {
-        $this->model->loadModel('task');
+        include_once 'app/models/task.php';
+        $task = new task();
 
-        $task   = new task;
-        $result = $task->validationForm($_POST);
+        $result = $this->model->validationForm($_POST);
 
         if($result) {
-            $add = $task->addTask($this->model->connectDB(), $_POST);
+            $add = $task->addTask( $_POST);
 
             if($add) {
                 $this->view->render('Задача успешно добавлена',  'К задачам');

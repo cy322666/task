@@ -15,8 +15,10 @@ class task extends Model
      *  ['массив 3 задач']
      *
      */
-    public function getContent($dbh, $key, $page)
+
+    public function getContent($key, $page)
     {
+        $dbh    = $this->connectDB();
         $action = 'get'.ucfirst($key);
         $array  = $this->$action($dbh);
 
@@ -48,7 +50,7 @@ class task extends Model
         return $sth->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    private function getId()
+    private function getId($dbh)
     {
         $sth = $dbh->prepare("SELECT * FROM `task` WHERE `id` = :id");
         $sth->execute(['id' => $_GET['id']]);
@@ -94,7 +96,7 @@ class task extends Model
 
     }
 
-    function getPage($array)
+    private function getPage($array)
     {
         if($_GET['page']) {
             $page = $_GET['page'];
@@ -105,7 +107,7 @@ class task extends Model
         return $page;
     }
 
-    public function addTask($connect, $array)
+    public function addTask($dbh)
     {
         $keys   = "`text`, `name`, `email`";
         $values = "'".$array['text']."', '".$array['user']."', '".$array['email']."'";
@@ -115,23 +117,5 @@ class task extends Model
         if($request){
             return true;
         } else return false;
-    }
-
-    public function validationForm($array)
-    {
-        foreach ($array as $key => $value) {
-
-            $value = trim($value);
-            $value = stripslashes($value);
-            $value = strip_tags($value);
-            $value = htmlspecialchars($value);
-
-            $array[$key] = $value;
-
-            if ($array[$key] == '') {
-                return false;
-            }
-        }
-        return $array;
     }
 }

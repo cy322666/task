@@ -1,4 +1,4 @@
-<form action="new" method="post">
+<form action="add" method="post">
     <div class="form-group">
         <div class="form-row">
             <label for="inputText">Текст задачи</label>

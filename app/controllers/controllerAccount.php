@@ -9,24 +9,37 @@ class controllerAccount extends Controller
         $this->view->render('Вход', '' );
     }
 
+    public function actionAdmin()
+    {
+        include_once 'app/models/task.php';
+        include_once 'app/models/user.php';
+
+        $task = new task();
+        $user = new user();
+
+        $vars = $task->getContent('all', $_GET['page']);
+        $vars['user'] = $user->navbarLabel();
+        $content = $this->view->render('Главная страница', $vars);
+    }
+
     public function actionEdit()
     {
-        $this->model->loadModel('task');
+        include_once 'app/models/task.php';
 
         $task = new task;
-        $vars = $task->getTask($this->model->connectDB(), 'id', '');
+        $vars = $task->addTask('id', '');
+        $content = $this->view->render('Обновление задачи', $vars);
 
         $this->view->render('Редактировать задачу', $vars);
     }
 
     public function actionUpdate()
     {
-        $this->model->loadModel('task');
+        include_once 'app/models/task.php';
 
         $task = new task;
-        $vars = $task->updateTask($this->model->connectDB(), 'id', '');
-
-            $this->view->render('Обновление', '' );
+        $vars = $task->updateTask('id', '');
+        $content = $this->view->render('Обновление задачи', $vars);
     }
 
     /**
@@ -34,39 +47,27 @@ class controllerAccount extends Controller
      */
     public function actionAccess()
     {
-        $access = require_once 'app/config/admin.php';
+        include_once 'app/models/task.php';
+        include_once 'app/models/user.php';
 
-        $task = new task;
-        $login = Model::validationForm($_POST);
+        $task = new task();
+        $user = new user();
 
-        if($login) {
-            if (($login AND ($access['login'] == $login['login']) AND
-                ($access['pass'] == $login['pass']))) {
+        $admin = $user->accessLogin();
 
-                    $this->model->loadModel('task');
-                    $task = new task;
+        if($admin['admin'] == true) {
+            $vars = $task->getContent('all', $_GET['page']);
+            $vars['user'] = $user->navbarLabel();
+            $content = $this->view->render('Главная страница', $vars);
 
-                    $page = $task->getPage($_GET);
-                    $vars = $task->getTask($this->model->connectDB(), 'all', $page);
-
-                    $this->view->render('Hello, Admin!', 'В админку');
-            } else {
-                $this->view->render('Неправильный логин или пароль!', 'Вернуться');
-            }
+            $this->view->render('Hello, Admin!', $vars);
+        } else {
+            //$user->feedbackAdmin();
+            $this->view->path = 'account/feedback';
+            $this->view->render('Отправка формы', $admin);
         }
     }
 
-    public function actionAdmin()
-    {
-        $this->model->loadModel('task');
-        $task = new task;
-
-        $page = $task->getPage($_GET);
-        $vars = $task->getTask($this->model->connectDB(), 'all', $page);
-
-        $this->view->render('Кабинет Администратора', $vars);
-
-    }
 
     public function actionSort()
     {
